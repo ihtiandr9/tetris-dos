@@ -45,7 +45,7 @@ void onUpdate(void);
 void OnKeyPressed(unsigned char key);
 char *NextFigure(void);
 char checkCollides(void);
-void FixFigure(void);
+void fixFigure(void);
 void drawAt(int x, int y, char *str, int color);
 void drawCharAt(int x, int y, char ch, int color);
 void fixedUpdate(void);
@@ -170,17 +170,21 @@ void drawFigure()
 
 char checkCollides()
 {
-  char collides = 0;
-  char point_x, point_y;
-  char i;
+  unsigned char collides = 0;
+  unsigned char point_x, point_y;
+  unsigned char i, j;
 
-  for(i = 0; i < 16; i++)
+  for(i = 0; i < FIGURE_WIDTH * FIGURE_HEIGHT; i++)
   {
-    point_y = curr_y + i / 4;
-    point_x = curr_x + i % 4;
-    if(curr_figure[i] && point_x >= FIELD_WIDTH)
+    point_y = curr_y + i / FIGURE_HEIGHT;
+    point_x = curr_x + i % FIGURE_WIDTH;
+    j = point_y * FIELD_WIDTH + point_x;
+
+    if(curr_figure[i] & field[j])
       collides = 1;
-    if(curr_figure[i] && point_y >= FIELD_HEIGHT)
+    if(curr_figure[i] && (point_x >= FIELD_WIDTH))
+      collides = 1;
+    if(curr_figure[i] && (point_y >= FIELD_HEIGHT))
       collides = 1;
   }
   return collides;
@@ -214,9 +218,19 @@ void DrawScore(unsigned long value)
    drawAt(0, 0, score_buffer, (COLOR_GREY << 12) | (COLOR_CYAN << 8));
 }
 
-void FixFigure()
+void fixFigure()
 {
-  char i;
+  unsigned char point_x, point_y;
+  unsigned char i, j;
+
+  for(i = 0; i < FIGURE_WIDTH * FIGURE_HEIGHT; i++)
+  {
+    point_y = curr_y + i / FIGURE_HEIGHT;
+    point_x = curr_x + i % FIGURE_WIDTH;
+    j = point_y * FIELD_WIDTH + point_x;
+    field[j] = curr_figure[i];
+  }
+    //char i;
 }
 
 void EraseFigure(void)
@@ -266,8 +280,7 @@ void onUpdate(void)
       if(checkCollides())
       {
         curr_y--;
-        FixFigure();
-        // EraseFigure();
+        fixFigure();
         curr_y = -1;
         curr_x = 3;
         curr_figure = NextFigure();

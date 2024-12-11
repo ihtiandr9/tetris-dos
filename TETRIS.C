@@ -80,12 +80,29 @@ static const char l_figure[16] =
   0, 0, 0, 0
 };
 
+void initVideo(void)
+{
+  asm{
+    mov ax, 03h
+    int 10h
+  }
+}
+
+void terminateVideo(void)
+{
+  asm{
+    mov ax, 03h
+    int 10h
+  }
+}
+
+
 int main(void)
 {
   int i;
   char can_exit = 0;
   speed = 1;
-  clrscr();
+  initVideo();
   for(i = 0; i < 200; i++)
     field[i] = 0;
   drawField();
@@ -104,6 +121,7 @@ int main(void)
     }
   }
   clrscr();
+  terminateVideo();  
   return 0;
 }
 

@@ -16,7 +16,7 @@ static unsigned long speed;
 void initVideo(void)
 {
   asm{
-    mov ax, 03h
+    mov ax, 01h
     int 10h
   }
 }
@@ -35,7 +35,8 @@ int main(void)
   int i;
   char can_exit = 0;
   speed = 1;
-//  initVideo();
+  initVideo();
+  clrscr();
   for(i = 0; i < 200; i++)
     field[i] = 0;
   drawField();
@@ -95,8 +96,9 @@ void drawAt(int x, int y, char *str, int color)
 
 void DrawScore(unsigned long value)
 {
-   char score_buffer[50];
+   char score_buffer[50]={0};
    sprintf(score_buffer,"Youre score 0x%lx",(unsigned long) value);
+   //printf("Youre score 0x%lx",(unsigned long) value);
    drawAt(0, 0, score_buffer, (COLOR_CYAN << 8));
 }
 

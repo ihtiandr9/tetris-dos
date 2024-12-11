@@ -1,6 +1,5 @@
 #include "tetris.h"
 #include <stdio.h>
-#include <conio.h>
 #include <dos.h>
 
 // Game field
@@ -32,8 +31,7 @@ void drawField()
 {
   unsigned char symbol = 0;
   unsigned int video_sym = 0;
-  int row;
-  int col;
+  int row, col, scale;
   int far *vid = (int far*) VIDEO_BUF + FIELD_Y * SCREEN_WIDTH + FIELD_X;
   for(row = 0; row < FIELD_HEIGHT; row++)
   {
@@ -44,8 +42,8 @@ void drawField()
       if (field[col])
       symbol = CHAR_FULL_BLOCK;
       video_sym = VID_SYM(field[col], symbol);
-      *vid = video_sym; vid ++;
-      *vid = video_sym; vid ++;
+      for(scale = 0; scale < FIELD_CHARW; scale++)
+          { *vid = video_sym; vid ++;}
     }
     *vid = COLOR_WHITE_ON_BLACK << 8 | CHAR_VERT_LINE; vid++;
     vid += SCREEN_WIDTH - FIELD_WIDTH * FIELD_CHARW - BORDERS;
@@ -54,8 +52,8 @@ void drawField()
   *vid = COLOR_WHITE_ON_BLACK << 8 | CHAR_LEFT_BOTTOM_CORNER; vid++;
   for(col = 0; col < FIELD_WIDTH; col++)
   {
-    *vid = COLOR_WHITE_ON_BLACK << 8 | CHAR_HORIZ_LINE; vid++;
-    *vid = COLOR_WHITE_ON_BLACK << 8 | CHAR_HORIZ_LINE; vid++;
+      for(scale = 0; scale < FIELD_CHARW; scale++)
+          { *vid = COLOR_WHITE_ON_BLACK << 8 | CHAR_HORIZ_LINE; vid++;}
   }
   *vid = COLOR_WHITE_ON_BLACK << 8 | CHAR_RIGHT_BOTTOM_CORNER; vid++;
 }
@@ -64,8 +62,7 @@ void drawFigure()
 {
   unsigned char symbol = 0;
   unsigned int video_sym = 0;
-  int row;
-  int col;
+  int row, col, scale;
   int i;
 
   int far *vid = (int far*) VIDEO_BUF + FIELD_Y * SCREEN_WIDTH + FIELD_X;
@@ -77,12 +74,12 @@ void drawFigure()
     {
       symbol = CHAR_FULL_BLOCK;
       i = row * 4 + col;
-      if (!curr_figure[i]) vid += 2;
+      if (!curr_figure[i]) vid += FIELD_CHARW;
       else
       {
         video_sym = VID_SYM(curr_figure[i], symbol);
-        *vid = video_sym; vid ++;
-        *vid = video_sym; vid ++;
+       for(scale = 0; scale < FIELD_CHARW; scale++)
+           { *vid = video_sym; vid ++;}
       }
     }
     vid += SCREEN_WIDTH - FIGURE_WIDTH * FIELD_CHARW;
@@ -108,8 +105,7 @@ void EraseFigure(void)
 {
   unsigned char symbol = 0;
   unsigned int video_sym = 0;
-  int row;
-  int col;
+  int row, col, scale;
   int i;
 
   int far *vid = (int far*) VIDEO_BUF + FIELD_Y * SCREEN_WIDTH + FIELD_X;
@@ -121,12 +117,12 @@ void EraseFigure(void)
     {
       symbol = ' ';
       i = row * 4 + col;
-      if (!curr_figure[i]) vid += 2;
+      if (!curr_figure[i]) vid += FIELD_CHARW;
       else
       {
         video_sym = VID_SYM(curr_figure[i], symbol);
-        *vid = video_sym; vid ++;
-        *vid = video_sym; vid ++;
+        for(scale = 0; scale < FIELD_CHARW; scale++)
+            { *vid = video_sym; vid ++;}
       }
     }
     vid += SCREEN_WIDTH - FIGURE_WIDTH * FIELD_CHARW;

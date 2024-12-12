@@ -1,4 +1,7 @@
 
+#ifndef H_TETRIS_H
+#define H_TETRIS_H
+
 #define MAX_GAME_SPEED          5000L
 
 #define VIDEO_BUF               0x0b8000000
@@ -46,3 +49,5 @@ void fixFigure(void);
 void drawAt(int x, int y, char *str, int color);
 void drawCharAt(int x, int y, char ch, int color);
 void fixedUpdate(void);
+
+#endif

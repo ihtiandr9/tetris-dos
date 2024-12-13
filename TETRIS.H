@@ -37,6 +37,8 @@
 #define FIGURE_WIDTH                    4
 
 // funtion proto
+void initVideo(void);
+void terminateVideo(void);
 void EraseFigure(void);
 void drawField(void);
 void drawFigure(void);

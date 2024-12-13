@@ -13,23 +13,6 @@ static unsigned long tics = MAX_GAME_SPEED;
 static unsigned char key;
 static unsigned long speed;
 
-void initVideo(void)
-{
-  asm{
-    mov ax, 01h
-    int 10h
-  }
-}
-
-void terminateVideo(void)
-{
-  asm{
-    mov ax, 03h
-    int 10h
-  }
-}
-
-
 int main(void)
 {
   int i;
@@ -81,31 +64,9 @@ char checkCollides()
   return collides;
 }
 
-void drawCharAt(int x, int y, char ch, int color)
-{
-  int far *vid = (int far*) VIDEO_BUF + SCREEN_WIDTH * y + x;
-  *vid = (color | ch);
-}
-
-void drawAt(int x, int y, char *str, int color)
-{
-  int i;
-  for(i = 0; str[i]; i++)
-     drawCharAt(x + i, y, str[i], color);
-}
-
-void DrawScore(unsigned long value)
-{
-   char score_buffer[50]={0};
-   sprintf(score_buffer,"Youre score 0x%lx",(unsigned long) value);
-   //printf("Youre score 0x%lx",(unsigned long) value);
-   drawAt(0, 0, score_buffer, (COLOR_CYAN << 8));
-}
-
-
 void fixedUpdate(void)
 {
-  char buf[50];
+  char buf[50]={0};
   sprintf(buf,"tics = %6ld", (unsigned long) tics);
   drawAt(0, 1, buf, (COLOR_CYAN << 8));
   tics += speed;
@@ -144,15 +105,14 @@ void OnKeyPressed(unsigned char key)
     case VK_LEFT:
       if(!curr_x) break;
       curr_x--;
-      if(checkCollides())
-        curr_x++;
-        else
-        {
+      if(!checkCollides())
+      {
           curr_x++;
           EraseFigure();
           curr_x--;
           drawFigure();
-        }
+      }else
+           ++curr_x;
       break;
     case VK_RIGHT:
       curr_x++;

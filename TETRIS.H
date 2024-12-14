@@ -46,7 +46,7 @@ void DrawScore(unsigned long value);
 void onUpdate(void);
 void OnKeyPressed(unsigned char key);
 char *NextFigure(void);
-char checkCollides(void);
+unsigned char checkCollides(void);
 void fixFigure(void);
 void drawAt(int x, int y, char *str, int color);
 void drawCharAt(int x, int y, char ch, int color);
